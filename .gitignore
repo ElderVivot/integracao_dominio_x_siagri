@@ -1,0 +1,6 @@
+__pycache__/
+.vscode/
+.mypy_cache/
+siagri/*[txt,TXT]
+dominio/*[txt,TXT]
+*_old*.xlsx
