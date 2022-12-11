@@ -1,5 +1,4 @@
 import os
-import sys
 import unicodedata
 import re
 import xlrd
@@ -141,7 +140,8 @@ def treatDecimalFieldInVector(data, numberOfField=0, fieldsHeader=[], nameFieldH
     :param numberOfField: numero do campo na planilha (opcional)
     :param fieldsHeader: linha do cabeçalho armazenado num vetor (opcional)
     :param nameFieldHeader: nome do cabeçalho que é pra buscar (opcional)
-    :param row: este serve pra caso não seja um pagamento que esteja na linha principal (que não tem cabeçalho, então pegar apenas pelo número do campo). O valor 'main' quer dizer que tá numa linha que pode ter cabeçalho
+    :param row: este serve pra caso não seja um pagamento que esteja na linha principal (que não tem cabeçalho, então pegar apenas pelo número do campo). O valor 'main' quer dizer que tá numa linha \
+        que pode ter cabeçalho
     :return: retorna um campo como decimal
     """
     if len(fieldsHeader) > 0 and nameFieldHeader is not None and nameFieldHeader != "":
@@ -203,7 +203,8 @@ def treatDateFieldInVector(data, numberOfField=0, fieldsHeader=[], nameFieldHead
     :param fieldsHeader: linha do cabeçalho armazenado num vetor (opcional)
     :param nameFieldHeader: nome do cabeçalho que é pra buscar (opcional)
     :param formatoData: 1 = 'DD/MM/YYYY' ; 2 = 'YYYY-MM-DD (opcional)
-    :param row: este serve pra caso não seja um pagamento que esteja na linha principal (que não tem cabeçalho, então pegar apenas pelo número do campo). O valor 'main' quer dizer que tá numa linha que pode ter cabeçalho
+    :param row: este serve pra caso não seja um pagamento que esteja na linha principal (que não tem cabeçalho, então pegar apenas pelo número do campo). O valor 'main' quer dizer que tá numa linha que pode \
+        ter cabeçalho
     :return: retorna um campo como decimal
     """
     if len(fieldsHeader) > 0 and nameFieldHeader is not None and nameFieldHeader != "":
@@ -235,7 +236,7 @@ def treatNumberField(value, isInt=False):
             if isInt is True:
                 try:
                     return int(value)
-                except Exception as e:
+                except Exception:
                     return 0
             return value
     except Exception:
@@ -354,7 +355,7 @@ def readTxt(caminho, encoding='utf-8', treatAsText=False, removeBlankLines=False
                     if linha.strip() == "":
                         continue
                 lista_linha.append(linha)
-    except Exception as e:
+    except Exception:
         lista_linha.clear()
         with open(caminho, 'rt', encoding='Windows-1252') as txtfile:
             for linha in txtfile:
@@ -397,7 +398,7 @@ def readExcelPandas(filePath: str, nameSheetToFilter=''):
 
             for sheet in sheetNames:
                 if nameSheetToFilter == '' or sheet == nameSheetToFilter:
-                    dataFrame = pandas.read_excel(filePath, sheet_name=sheet, header=None, convert_float=True)
+                    dataFrame = pandas.read_excel(filePath, sheet_name=sheet, header=None)
                     dataFrameDropNa = dataFrame.dropna(how='all')
                     dataFrameFillNa = dataFrameDropNa.fillna('')
                     dataFrameToRecords = dataFrameFillNa.to_records(index=False)

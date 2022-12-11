@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "integracao-dominio-x-siagri"
+version = "0.1.0"
+description = "Integracao Dominio x Siagri"
+authors = ["Elder Vivot <eldervivot@gmail.com>"]
+readme = "README.md"
+packages = [{include = "integracao_dominio_x_siagri"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+xlrd = "^2.0.1"
+pandas = "^1.5.2"
+openpyxl = "^3.0.10"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.2.0"
+autopep8 = "^2.0.0"
+flake8 = "^6.0.0"
+mypy = "^0.991"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
