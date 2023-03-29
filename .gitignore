@@ -4,3 +4,4 @@ __pycache__/
 siagri/*[txt,TXT]
 dominio/*[txt,TXT]
 *_old*.xlsx
+bkp/

@@ -17,7 +17,7 @@ class MainLancamentos():
         self._readLancamentosDominio = ReadLancamentosDominio()
         self._readConfiguracoes = ReadConfiguracoes()
         self._configuracoes = self._readConfiguracoes.process()
-        self._typeProcess = 1  # when 1 then layout provisao, when 2 then layout contas a pagar
+        self._typeProcess = 2  # when 1 then layout provisao, when 2 then layout contas a pagar
 
     def process(self, wayFile):
         lancamentos = self._readLancamentosDominio.process(wayFile)

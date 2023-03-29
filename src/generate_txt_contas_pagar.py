@@ -62,6 +62,7 @@ class GenerateTxtContasPagar():
             return f"CUS{formatLan['centro_custo']}{formatLan['valor_lancamento']}"
 
     def process(self):
+        alreadyGenerateCabecalho = False
         with open(self._wayFile, 'w') as fileWrite:
             for lancamento in self._lancamentos:
                 formatLancamento = self.formatLancamento(lancamento)
@@ -72,10 +73,10 @@ class GenerateTxtContasPagar():
                 rowContaCredito = self.mountDataRow('CON-C', formatLancamento)
                 rowCentroCusto = self.mountDataRow('CUS', formatLancamento)
 
-                fileWrite.write(f"{rowHeader}\r\n")
-                fileWrite.write(f"{rowParcelaContaPagar}\r\n")
-
-                print(lancamento['new_id_tipo_docto_deb'], lancamento['new_id_tipo_docto_cre'])
+                if alreadyGenerateCabecalho is False:
+                    fileWrite.write(f"{rowHeader}\r\n")
+                    fileWrite.write(f"{rowParcelaContaPagar}\r\n")
+                    alreadyGenerateCabecalho = True
 
                 if lancamento['new_id_tipo_docto_deb'] == "":
                     fileWrite.write(f"{rowContaDebito}\r\n")
