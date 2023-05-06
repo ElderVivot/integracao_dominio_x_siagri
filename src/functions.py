@@ -1,16 +1,17 @@
-import os
-import unicodedata
-import re
-import xlrd
 import datetime
+import os
+import re
+import unicodedata
+
 import pandas
+import xlrd
 
 absPath = os.path.dirname(os.path.abspath(__file__))
 
 
 def getOnlyNameFile(nameFileOriginal):
-    nameFileSplit = nameFileOriginal.split('.')
-    nameFile = '.'.join(nameFileSplit[:-1])
+    nameFileSplit = nameFileOriginal.split(".")
+    nameFile = ".".join(nameFileSplit[:-1])
     return nameFile
 
 
@@ -21,22 +22,22 @@ def getDateTimeNowInFormatStr():
 
 def removerAcentosECaracteresEspeciais(palavra):
     # Unicode normalize transforma um caracter em seu equivalente em latin.
-    nfkd = unicodedata.normalize('NFKD', palavra).encode('ASCII', 'ignore').decode('ASCII')
-    palavraTratada = u"".join([c for c in nfkd if not unicodedata.combining(c)])
+    nfkd = unicodedata.normalize("NFKD", palavra).encode("ASCII", "ignore").decode("ASCII")
+    palavraTratada = "".join([c for c in nfkd if not unicodedata.combining(c)])
 
     # Usa expressão regular para retornar a palavra apenas com valores corretos
-    return re.sub('[^a-zA-Z0-9.!+:><=)?$(/*,\-_ \\\]', '', palavraTratada)
+    return re.sub("[^a-zA-Z0-9.!+:><=)?$(/*,\-_ \\\]", "", palavraTratada)
 
 
 def minimalizeSpaces(text):
     _result = text
-    while ("  " in _result):
+    while "  " in _result:
         _result = _result.replace("  ", " ")
     _result = _result.strip()
     return _result
 
 
-def searchPositionFieldForName(header, nameField=''):
+def searchPositionFieldForName(header, nameField=""):
     nameField = treatTextField(nameField)
     try:
         return header[nameField]
@@ -58,7 +59,7 @@ def analyzeIfFieldHasPositionInFileEnd(data, positionInFile, positionInFileEnd):
         if positionInFileEnd <= 0:
             return data[positionInFile]
         else:
-            return ''.join(data[positionInFile:positionInFileEnd])
+            return "".join(data[positionInFile:positionInFileEnd])
     except Exception:
         return ""
 
@@ -87,8 +88,7 @@ def treatTextField(value):
         return ""
 
 
-def treatTextFieldInVector(data, numberOfField=0, fieldsHeader=[], nameFieldHeader='', positionInFileEnd=0,
-                           keepTextOriginal=True):
+def treatTextFieldInVector(data, numberOfField=0, fieldsHeader=[], nameFieldHeader="", positionInFileEnd=0, keepTextOriginal=True):
     """
     :param data: Informar o array de dados que quer ler
     :param numberOfField: numero do campo na planilha (opcional)
@@ -119,14 +119,14 @@ def treatDecimalField(value, numberOfDecimalPlaces=2):
         return value
     try:
         value = str(value)
-        value = re.sub('[^0-9.,-]', '', value)
-        if value.find(',') >= 0 and value.find('.') >= 0:
-            value = value.replace('.', '')
+        value = re.sub("[^0-9.,-]", "", value)
+        if value.find(",") >= 0 and value.find(".") >= 0:
+            value = value.replace(".", "")
 
-        if value.find(',') >= 0:
-            value = value.replace(',', '.')
+        if value.find(",") >= 0:
+            value = value.replace(",", ".")
 
-        if value.find('.') < 0:
+        if value.find(".") < 0:
             value = int(value)
 
         return float(value)
@@ -134,7 +134,7 @@ def treatDecimalField(value, numberOfDecimalPlaces=2):
         return float(0)
 
 
-def treatDecimalFieldInVector(data, numberOfField=0, fieldsHeader=[], nameFieldHeader='', row='main', positionInFileEnd=0):
+def treatDecimalFieldInVector(data, numberOfField=0, fieldsHeader=[], nameFieldHeader="", row="main", positionInFileEnd=0):
     """
     :param data: Informar o array de dados que quer ler
     :param numberOfField: numero do campo na planilha (opcional)
@@ -146,7 +146,7 @@ def treatDecimalFieldInVector(data, numberOfField=0, fieldsHeader=[], nameFieldH
     """
     if len(fieldsHeader) > 0 and nameFieldHeader is not None and nameFieldHeader != "":
         try:
-            if row == 'main':
+            if row == "main":
                 return treatDecimalField(data[searchPositionFieldForName(fieldsHeader, nameFieldHeader)])
             else:
                 return treatDecimalField(analyzeIfFieldHasPositionInFileEnd(data, numberOfField, positionInFileEnd))
@@ -168,7 +168,7 @@ def treatDateField(valorCampo, formatoData=1):
     :param formatoData: 1 = 'DD/MM/YYYY' ; 2 = 'YYYY-MM-DD' ; 3 = 'YYYY/MM/DD' ; 4 = 'DDMMYYYY'
     :return: retorna como uma data. Caso não seja uma data válida irá retornar None
     """
-    if type(valorCampo) == 'datetime.date':
+    if type(valorCampo) == "datetime.date":
         return valorCampo
 
     valorCampo = str(valorCampo).strip()
@@ -186,7 +186,7 @@ def treatDateField(valorCampo, formatoData=1):
         lengthField = 8
     elif formatoData == 5:
         formatoDataStr = "%d/%m/%Y"
-        valorCampo = valorCampo[0:6] + '/20' + valorCampo[6:]
+        valorCampo = valorCampo[0:6] + "/20" + valorCampo[6:]
     elif formatoData == 6:
         formatoDataStr = "%d%m%Y"
 
@@ -196,7 +196,7 @@ def treatDateField(valorCampo, formatoData=1):
         return None
 
 
-def treatDateFieldInVector(data, numberOfField=0, fieldsHeader=[], nameFieldHeader='', formatoData=1, row='main', positionInFileEnd=0):
+def treatDateFieldInVector(data, numberOfField=0, fieldsHeader=[], nameFieldHeader="", formatoData=1, row="main", positionInFileEnd=0):
     """
     :param data: Informar o array de dados que quer ler
     :param numberOfField: numero do campo na planilha (opcional)
@@ -209,7 +209,7 @@ def treatDateFieldInVector(data, numberOfField=0, fieldsHeader=[], nameFieldHead
     """
     if len(fieldsHeader) > 0 and nameFieldHeader is not None and nameFieldHeader != "":
         try:
-            if row == 'main':
+            if row == "main":
                 return treatDateField(data[searchPositionFieldForName(fieldsHeader, nameFieldHeader)], formatoData)
             else:
                 return treatDateField(analyzeIfFieldHasPositionInFileEnd(data, numberOfField, positionInFileEnd), formatoData)
@@ -229,7 +229,7 @@ def treatNumberField(value, isInt=False):
     if type(value) == int:
         return value
     try:
-        value = re.sub("[^0-9]", '', value)
+        value = re.sub("[^0-9]", "", value)
         if value == "":
             return 0
         else:
@@ -243,7 +243,7 @@ def treatNumberField(value, isInt=False):
         return 0
 
 
-def treatNumberFieldInVector(data, numberOfField=-1, fieldsHeader=[], nameFieldHeader='', isInt=False, positionInFileEnd=0):
+def treatNumberFieldInVector(data, numberOfField=-1, fieldsHeader=[], nameFieldHeader="", isInt=False, positionInFileEnd=0):
     """
     :param data: Informar o array de dados que quer ler
     :param numberOfField: numero do campo na planilha (opcional)
@@ -266,16 +266,16 @@ def treatNumberFieldInVector(data, numberOfField=-1, fieldsHeader=[], nameFieldH
             return 0
 
 
-def readExcel(arquivo, nameSheetToFilter='filterAll'):
+def readExcel(arquivo, nameSheetToFilter="filterAll"):
     lista_dados = []
     dados_linha = []
 
     if os.path.getsize(arquivo) > 0:
         try:
-            arquivo = xlrd.open_workbook(arquivo, logfile=open(os.devnull, 'w'))
+            arquivo = xlrd.open_workbook(arquivo, logfile=open(os.devnull, "w"))
         except Exception:
             try:
-                arquivo = xlrd.open_workbook(arquivo, logfile=open(os.devnull, 'w'), encoding_override='Windows-1252')
+                arquivo = xlrd.open_workbook(arquivo, logfile=open(os.devnull, "w"), encoding_override="Windows-1252")
             except Exception as e:
                 print(e)
                 return []
@@ -285,12 +285,11 @@ def readExcel(arquivo, nameSheetToFilter='filterAll'):
 
         # lê cada planilha
         for sheetName in planilhas:
-
             # pega os dados da planilha
             planilha = arquivo.sheet_by_name(sheetName)
 
             # continue only if name sheet equal the name filter of argument
-            if treatTextField(sheetName) == treatTextField(nameSheetToFilter) or nameSheetToFilter == 'filterAll':
+            if treatTextField(sheetName) == treatTextField(nameSheetToFilter) or nameSheetToFilter == "filterAll":
                 # pega a quantidade de linha que a planilha tem
                 max_row = planilha.nrows
                 # pega a quantidade de colunca que a planilha tem
@@ -298,7 +297,6 @@ def readExcel(arquivo, nameSheetToFilter='filterAll'):
 
                 # lê cada linha e coluna da planilha e imprime
                 for i in range(0, max_row):
-
                     valor_linha = planilha.row_values(rowx=i)
 
                     # ignora linhas em branco
@@ -307,16 +305,15 @@ def readExcel(arquivo, nameSheetToFilter='filterAll'):
 
                     # lê as colunas
                     for j in range(0, max_column):
-
                         # as linhas abaixo analisa o tipo de dado que está na planilha e retorna no formato correto, sem ".0" para números ou a data no formato numérico
                         tipo_valor = planilha.cell_type(rowx=i, colx=j)
                         valor_celula = removerAcentosECaracteresEspeciais(str(planilha.cell_value(rowx=i, colx=j)))
                         if tipo_valor == 2:
-                            valor_casas_decimais = valor_celula.split('.')
+                            valor_casas_decimais = valor_celula.split(".")
                             valor_casas_decimais = treatNumberFieldInVector(valor_casas_decimais, 2, isInt=True)
                             try:
                                 if valor_casas_decimais == 0:
-                                    valor_celula = valor_celula.split('.')
+                                    valor_celula = valor_celula.split(".")
                                     valor_celula = valor_celula[0]
                             except Exception:
                                 valor_celula = valor_celula
@@ -325,7 +322,7 @@ def readExcel(arquivo, nameSheetToFilter='filterAll'):
                             valor_celula = xlrd.xldate.xldate_as_datetime(valor_celula, datemode=0)
                             valor_celula = valor_celula.strftime("%d/%m/%Y")
                         # retira espaços e quebra de linha da célula
-                        valor_celula = str(valor_celula).strip().replace('\n', '')
+                        valor_celula = str(valor_celula).strip().replace("\n", "")
 
                         # adiciona o valor da célula na lista de dados_linha
                         dados_linha.append(valor_celula)
@@ -341,12 +338,12 @@ def readExcel(arquivo, nameSheetToFilter='filterAll'):
     return lista_dados
 
 
-def readTxt(caminho, encoding='utf-8', treatAsText=False, removeBlankLines=False):
+def readTxt(caminho, encoding="utf-8", treatAsText=False, removeBlankLines=False):
     lista_linha = []
 
     # le o arquivo e grava num vetor
     try:
-        with open(caminho, 'rt', encoding=encoding) as txtfile:
+        with open(caminho, "rt", encoding=encoding) as txtfile:
             for linha in txtfile:
                 linha = str(linha).replace("\n", "")
                 if treatAsText is True:
@@ -357,7 +354,7 @@ def readTxt(caminho, encoding='utf-8', treatAsText=False, removeBlankLines=False
                 lista_linha.append(linha)
     except Exception:
         lista_linha.clear()
-        with open(caminho, 'rt', encoding='Windows-1252') as txtfile:
+        with open(caminho, "rt", encoding="Windows-1252") as txtfile:
             for linha in txtfile:
                 linha = str(linha).replace("\n", "")
                 if treatAsText is True:
@@ -371,16 +368,16 @@ def readTxt(caminho, encoding='utf-8', treatAsText=False, removeBlankLines=False
 
 
 def identifiesAndTransformTypeDataOfSeriesPandas(data):
-    newData = ''
+    newData = ""
     typeData = str(type(data))
 
-    if typeData.count('str') > 0:
+    if typeData.count("str") > 0:
         newData = removerAcentosECaracteresEspeciais(data)
-    elif typeData.count('int') > 0:
+    elif typeData.count("int") > 0:
         newData = treatNumberField(data, isInt=True)
-    elif typeData.count('float') > 0:
+    elif typeData.count("float") > 0:
         newData = treatDecimalField(data)
-    elif typeData.count('pandas') > 0 and typeData.count('timestamp') > 0:
+    elif typeData.count("pandas") > 0 and typeData.count("timestamp") > 0:
         newData = data.strftime("%d/%m/%Y")
     else:
         newData = data
@@ -388,7 +385,7 @@ def identifiesAndTransformTypeDataOfSeriesPandas(data):
     return newData
 
 
-def readExcelPandas(filePath: str, nameSheetToFilter=''):
+def readExcelPandas(filePath: str, nameSheetToFilter=""):
     listOfDataAllRows = []
     dataOfRow = []
 
@@ -397,10 +394,10 @@ def readExcelPandas(filePath: str, nameSheetToFilter=''):
             sheetNames = pandas.ExcelFile(filePath).sheet_names
 
             for sheet in sheetNames:
-                if nameSheetToFilter == '' or sheet == nameSheetToFilter:
+                if nameSheetToFilter == "" or sheet == nameSheetToFilter:
                     dataFrame = pandas.read_excel(filePath, sheet_name=sheet, header=None)
-                    dataFrameDropNa = dataFrame.dropna(how='all')
-                    dataFrameFillNa = dataFrameDropNa.fillna('')
+                    dataFrameDropNa = dataFrame.dropna(how="all")
+                    dataFrameFillNa = dataFrameDropNa.fillna("")
                     dataFrameToRecords = dataFrameFillNa.to_records(index=False)
                     for dataRow in dataFrameToRecords:
                         for data in dataRow:

@@ -2,22 +2,23 @@ import os
 import sys
 
 absPath = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.join(absPath, '..'))
+sys.path.append(os.path.join(absPath, ".."))
 
+from generate_txt_contas_pagar import GenerateTxtContasPagar
+from generate_txt_provisao import GenerateTxtProvisao
+from process_lancamentos import ProcessLancamentos
 from read_configuracoes import ReadConfiguracoes
 from read_lanc_dominio import ReadLancamentosDominio
-from process_lancamentos import ProcessLancamentos
-from generate_txt_provisao import GenerateTxtProvisao
-from generate_txt_contas_pagar import GenerateTxtContasPagar
 
 
-class MainLancamentos():
+class MainLancamentos:
     def __init__(self):
-        self._wayLancDominio = 'dominio'
+        self._wayLancDominio = "dominio"
         self._readLancamentosDominio = ReadLancamentosDominio()
         self._readConfiguracoes = ReadConfiguracoes()
         self._configuracoes = self._readConfiguracoes.process()
-        self._typeProcess = 2  # when 1 then layout provisao, when 2 then layout contas a pagar
+        self._typeProcess = 1  # when 1 then layout provisao, when 2 then layout contas a pagar
+        self._typeProcess = int(input("\n - Digite 1 pra converter arquivo no layout de Provisão e 2 para Contas a Pagar: "))
 
     def process(self, wayFile):
         lancamentos = self._readLancamentosDominio.process(wayFile)
@@ -36,9 +37,9 @@ class MainLancamentos():
     def processAll(self):
         for root, _, files in os.walk(self._wayLancDominio):
             for file in files:
-                if file.lower().endswith(('.txt')):
+                if file.lower().endswith((".txt")):
                     wayFile = os.path.join(root, file)
-                    print(f'- Processando arquivo {file}')
+                    print(f"- Processando arquivo {file}")
                     self.process(wayFile)
 
 
