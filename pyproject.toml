@@ -22,3 +22,8 @@ mypy = "^0.991"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.autopep8]
+max_line_length = 210
+ignore = "E501,W6"  # or ["E501", "W6"]
+in-place = true

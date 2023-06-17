@@ -2,11 +2,18 @@ import datetime
 import os
 import re
 import unicodedata
-
 import pandas
 import xlrd
+import sys
+from pathlib import Path
 
 absPath = os.path.dirname(os.path.abspath(__file__))
+
+
+def localPath() -> Path:
+    if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+        return Path('C:\\integracao_dominio_x_siagri').resolve()
+    return Path('.').resolve()
 
 
 def getOnlyNameFile(nameFileOriginal):

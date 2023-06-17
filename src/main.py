@@ -4,11 +4,11 @@ import sys
 absPath = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(absPath, ".."))
 
-from generate_txt_contas_pagar import GenerateTxtContasPagar
-from generate_txt_provisao import GenerateTxtProvisao
-from process_lancamentos import ProcessLancamentos
-from read_configuracoes import ReadConfiguracoes
 from read_lanc_dominio import ReadLancamentosDominio
+from read_configuracoes import ReadConfiguracoes
+from process_lancamentos import ProcessLancamentos
+from generate_txt_provisao import GenerateTxtProvisao
+from generate_txt_contas_pagar import GenerateTxtContasPagar
 
 
 class MainLancamentos:
@@ -17,8 +17,8 @@ class MainLancamentos:
         self._readLancamentosDominio = ReadLancamentosDominio()
         self._readConfiguracoes = ReadConfiguracoes()
         self._configuracoes = self._readConfiguracoes.process()
-        self._typeProcess = 1  # when 1 then layout provisao, when 2 then layout contas a pagar
-        self._typeProcess = int(input("\n - Digite 1 pra converter arquivo no layout de Provisão e 2 para Contas a Pagar: "))
+        self._typeProcess = int(input("\n- Digite 1 pra converter arquivo no layout de Provisão e 2 para Contas a Pagar: "))
+        print('')
 
     def process(self, wayFile):
         lancamentos = self._readLancamentosDominio.process(wayFile)

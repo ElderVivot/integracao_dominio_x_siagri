@@ -5,3 +5,6 @@ siagri/*[txt,TXT]
 dominio/*[txt,TXT]
 *_old*.xlsx
 bkp/
+build/
+dist/
+main.spec
